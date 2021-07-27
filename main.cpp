@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 
 #include "farmacia.h"
 
@@ -33,5 +34,5 @@ int main()
                 cout<<"Comando invalido"<<endl;
         }
 	}while(op!= 0);
-
+    farm.guardar();
 }

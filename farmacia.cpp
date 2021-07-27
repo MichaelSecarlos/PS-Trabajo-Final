@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "farmacia.h"
 
 Farmacia::Farmacia()
@@ -20,7 +21,7 @@ void Farmacia::facturacion()
     auto tiempo_inicio = chrono::system_clock::now();
     
     //Operacion de facturacion
-    int precioVenta=0;
+    float precioVenta=0;
 	int codigo;
 	do
     {
@@ -28,38 +29,41 @@ void Farmacia::facturacion()
 		cin>>codigo;
         aux = inicio;
         anterior = NULL;
-        while(aux != NULL && aux->codigo != codigo)
+        //Buscamos el producto
+        while(aux != NULL && aux->codigo != codigo && codigo != 0)
         {
             anterior = aux;
             aux = aux->ptrsig;
         }
-        if(aux == NULL)
-        {
+        //Si existe el producto
+        if(aux == NULL && codigo != 0)
             cout << "Producto no encontrado..." << endl;
-        }
         else
         {
-            if(anterior == NULL)
-            {
-                inicio = inicio->ptrsig;
-            }
-            else
-            {
-                anterior->ptrsig = aux->ptrsig;
-            }
+            //Si aun hay existencias de ese producto
             if(aux->cantidad>0)
             {
                 precioVenta=precioVenta+aux->precio;
                 aux->cantidad=aux->cantidad-1;
+                //En caso ya no haya mas stock de ese producto
+                if(aux->cantidad == 0)
+                {
+                    if(anterior == NULL)
+                        inicio = inicio->ptrsig;
+                    else
+                        anterior->ptrsig = aux->ptrsig;
+                }
             }
+            //Si no hay existencias
             else
             {
                 cout<<"No hay suficientes productos de este tipo: "<<aux->codigo<<endl;
             }
         }
-	}while(codigo!=0);
+	} while(codigo!=0);
 	cout<<"El precio a pagar es: "<<precioVenta<<endl;
     
+    cin.get();
     cin.get();
 
     //Tiempo final
@@ -213,7 +217,7 @@ void Farmacia::inventario()
 	int op;
 	do{
         cout << "1.Agregar nuevo producto" << endl;
-        cout << "2.Eliminaro Producto" << endl;
+        cout << "2.Eliminar Producto" << endl;
         cout << "3.Ver todos los productos" << endl;
         cout << "0.Regresar" << endl;
         cin >> op;
